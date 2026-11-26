@@ -22,10 +22,8 @@ export class ProductsService implements OnModuleInit {
   constructor(@InjectModel(Product.name) private readonly productModel: Model<Product>) {}
 
   async onModuleInit() {
-    // With autoIndex (development, tests), Mongoose builds the indexes in the background:
-    // waiting for them means no request is served before the unique index on `sku` exists.
-    await this.productModel.init();
-    // Without it (production), a release step builds them: refuse to start if it didn't.
+    // In development and tests, the model arrives with its indexes built (waitForModelInit in AppModule).
+    // With autoIndex off (production), a release step builds them: refuse to start if it didn't.
     const { toCreate } = await this.productModel.diffIndexes();
     if (toCreate.length > 0) {
       throw new Error(`Missing indexes on products: ${JSON.stringify(toCreate)}. Run npm run db:indexes.`);

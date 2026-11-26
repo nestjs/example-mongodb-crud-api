@@ -11,7 +11,7 @@ A product catalog API on MongoDB through Mongoose: create a product, list the ca
 - A malformed ObjectId is a 400, an unknown one a 404, and a duplicate SKU (in any letter case) a 409.
 - An update writes only the fields it sends, and is refused with a 409 when it was made from a stale version.
 - The list pages with an opaque cursor, filters by category, price and stock, and sorts only by what has an index.
-- The app refuses to start when its configuration is invalid or an index is missing.
+- The app refuses to start when its configuration is invalid, or an index is missing or can't be built.
 - Security headers, CORS for the origins you list, an OpenAPI document, liveness and readiness checks, and JSON logs in production.
 
 There is no sign-in: the tutorial keeps the MongoDB parts in focus.
@@ -29,7 +29,7 @@ docker compose up -d
 npm run start
 ```
 
-The API listens on http://localhost:3000, with Swagger UI at http://localhost:3000/docs. Outside production, Mongoose builds the indexes the schema declares at startup, so there is no migration step.
+The API listens on http://localhost:3000, with Swagger UI at http://localhost:3000/docs. Outside production, Mongoose builds the indexes the schema declares at startup, and the app waits for them (the `waitForModelInit` connection option), so there is no migration step.
 
 ```bash
 curl localhost:3000/products --json '{"sku":"kb-001","name":"Mechanical keyboard","category":"Keyboards","price":12900,"stock":5}'

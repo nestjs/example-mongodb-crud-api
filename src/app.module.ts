@@ -28,6 +28,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
         serverSelectionTimeoutMS: 5_000,
         // Builds the schemas' indexes at startup. Production builds them in a release step instead.
         autoIndex: config.get('NODE_ENV', { infer: true }) !== 'production',
+        // Every model waits for its collection and indexes before it's injected.
+        waitForModelInit: true,
       }),
     }),
     ProductsModule,
